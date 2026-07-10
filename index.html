@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ro">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111827" />
+    <meta name="description" content="Alertă Sigură - panou administrare și alerte de panică." />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Alertă Sigură</title>
+  </head>
+  <body>
+    <main class="shell">
+      <section id="welcome" class="card welcome">
+        <div class="brand"><img id="welcomeLogo" class="brand-logo hidden" alt="Logo aplicație" /><span id="welcomeName" class="eyebrow">ALERTĂ SIGURĂ</span></div>
+        <h1>Ajutor rapid, când contează.</h1>
+        <p>Alege modul în care intri în aplicație.</p>
+        <div class="choice-grid">
+          <button class="choice" data-role="client"><span>👤</span><strong>Sunt client</strong><small>Trimit alertă și văd resursele aprobate.</small></button>
+          <button class="choice" data-role="admin"><span>🛡️</span><strong>Sunt administrator</strong><small>Administrezi persoane, linkuri și alerte.</small></button>
+        </div>
+      </section>
+
+      <section id="clientLogin" class="card hidden narrow">
+        <button class="back" data-back>← Înapoi</button>
+        <span class="eyebrow">ACCES CLIENT</span>
+        <h2>Conectare cu Google</h2>
+        <p class="muted">În această versiune demonstrativă, introdu Gmail-ul aprobat de administrator.</p>
+        <label>Adresa Gmail <input id="clientEmail" type="email" placeholder="nume@gmail.com" autocomplete="email" /></label>
+        <label>Numele tău <input id="clientName" type="text" placeholder="Numele afișat în alertă" maxlength="50" /></label>
+        <button id="clientEnter" class="primary">Trimite codul pe e-mail</button>
+        <p id="clientError" class="error"></p>
+      </section>
+
+      <section id="clientVerify" class="card hidden narrow">
+        <button class="back" data-back>← Înapoi</button>
+        <span class="eyebrow">VERIFICARE E-MAIL</span>
+        <h2>Introdu codul primit</h2>
+        <p class="muted">Am trimis un cod din 6 cifre la <b id="verifyEmail"></b>.</p>
+        <label>Cod de confirmare <input id="verifyCode" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="one-time-code" /></label>
+        <button id="verifyEnter" class="primary">Confirmă și intră</button>
+        <p id="verifyError" class="error"></p>
+        <p class="muted tiny">În previzualizarea de pe acest calculator, codul de test este 123456. În versiunea privată instalată pe telefon, codul va fi trimis pe e-mail.</p>
+      </section>
+
+      <section id="adminLogin" class="card hidden narrow">
+        <button class="back" data-back>← Înapoi</button>
+        <span class="eyebrow">PANOU ADMINISTRATOR</span>
+        <h2>Acces protejat</h2>
+        <label>Cod administrator <input id="adminCode" type="password" placeholder="Codul tău" /></label>
+        <button id="adminEnter" class="primary">Deschide panoul</button>
+        <p id="adminError" class="error"></p>
+      </section>
+
+      <section id="adminSetup" class="card hidden narrow">
+        <button class="back" data-back>← Înapoi</button>
+        <span class="eyebrow">PRIMA CONFIGURARE</span>
+        <h2>Creează parola de administrator</h2>
+        <p class="muted">Alege o parolă pe care o știi numai tu. Nu va fi afișată în aplicație.</p>
+        <label>Parola ta <input id="setupPassword" type="password" autocomplete="new-password" /></label>
+        <label>Repetă parola <input id="setupPasswordConfirm" type="password" autocomplete="new-password" /></label>
+        <button id="setupAdmin" class="primary">Salvează parola</button>
+        <p id="setupError" class="error"></p>
+      </section>
+
+      <section id="clientApp" class="hidden app-view">
+        <header><div><span class="eyebrow">BINE AI VENIT</span><h2 id="clientGreeting">Client</h2></div><button class="logout">Ieșire</button></header>
+        <div class="client-grid">
+          <article class="card panic-card">
+            <span class="eyebrow">URGENȚĂ</span><h2>Ai nevoie de ajutor?</h2>
+            <p>Alerta trimite administratorului numele tău, ora și locația curentă, numai după ce confirmi.</p>
+            <button id="panicButton" class="panic"><span class="panic-label">Te ajut<br>cu ceva?</span><small>Trimite alertă</small></button>
+            <p id="panicMessage" class="status"></p>
+          </article>
+          <article class="card"><span class="eyebrow">ASISTENT</span><h2>Cu ce te pot ajuta?</h2><div id="botLog" class="bot-log"><p id="botWelcome">Salut! Pot să te îndrum către resursele disponibile sau către alerta de panică.</p></div><div class="bot-input"><input id="botInput" placeholder="Scrie un mesaj..." /><button id="botSend">Trimite</button></div></article>
+          <article class="card resources"><span class="eyebrow">RESURSE</span><h2>Linkuri utile</h2><div id="clientLinks"></div></article>
+        </div>
+      </section>
+
+      <section id="adminApp" class="hidden app-view">
+        <header><div><span class="eyebrow">CONTROL TOTAL</span><h2>Panou administrator</h2></div><button class="logout">Ieșire</button></header>
+        <div class="admin-layout">
+          <article class="card alerts"><div class="section-title"><div><span class="eyebrow">ALERTE</span><h2>Solicitări de ajutor</h2></div><span id="alertCount" class="badge">0 noi</span></div><div id="alertsList" class="list empty">Nu există alerte încă.</div></article>
+          <article class="card"><span class="eyebrow">ACCES MANUAL</span><h2>Utilizatori aprobați</h2><form id="userForm" class="stack"><input id="newEmail" type="email" placeholder="adresa@gmail.com" required /><button class="primary">Adaugă utilizator</button></form><div id="usersList" class="list"></div></article>
+          <article class="card"><span class="eyebrow">LINKURI CLIENT</span><h2>Resurse aprobate</h2><form id="linkForm" class="stack"><input id="linkTitle" placeholder="Titlul linkului" required /><input id="linkUrl" type="url" placeholder="https://exemplu.ro" required /><button class="primary">Adaugă link</button></form><div id="linksList" class="list"></div></article>
+          <article class="card"><span class="eyebrow">SETĂRI</span><h2>Identitatea aplicației</h2><label>Numele aplicației <input id="appName" maxlength="40" /></label><label>Logo aplicație <input id="appLogo" type="file" accept="image/*" /></label><label>IP / adresă server <input id="serverIp" placeholder="ex. 192.168.1.10" /></label><button id="saveSettings" class="primary">Salvează setările</button><hr><h3>Mesajul botului</h3><label>Mesaj de bun venit <input id="botMessage" maxlength="300" /></label><button id="saveBot" class="primary">Salvează mesajul botului</button><hr><h3>Schimbă parola</h3><label>Parolă nouă <input id="newAdminPassword" type="password" autocomplete="new-password" /></label><button id="changePassword" class="primary">Schimbă parola</button><p id="passwordMessage" class="status"></p></article>
+        </div>
+      </section>
+    </main>
+    <template id="alertTemplate"><div class="alert-item"><div><b class="alert-person"></b><p class="muted alert-time"></p><a class="map-link" target="_blank" rel="noopener">Deschide harta</a></div><button class="resolve">Rezolvă</button></div></template>
+    <script src="app.js"></script>
+  </body>
+</html>
